@@ -33,6 +33,13 @@ class _DayDetailsPageState extends State<DayDetailsPage> {
     widget.onWorkUpdated(dayWork);
   }
 
+  void _deleteWork(int index) {
+    setState(() {
+      dayWork.removeAt(index);
+    });
+    widget.onWorkUpdated(dayWork);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,13 +53,25 @@ class _DayDetailsPageState extends State<DayDetailsPage> {
           children: [
             if (dayWork.isNotEmpty)
               Expanded(
-                child: ListView(
-                  children: dayWork.map((entry) {
+                child: ListView.builder(
+                  itemCount: dayWork.length,
+                  itemBuilder: (context, index) {
+                    final entry = dayWork[index];
                     return ListTile(
                       title: Text(entry['work']),
                       subtitle: Text('${entry['hours']} horas'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _deleteWork(index),
+                      ),
                     );
-                  }).toList(),
+                  },
+                ),
+              )
+            else
+              const Expanded(
+                child: Center(
+                  child: Text('No hay trabajos registrados para este día.'),
                 ),
               ),
             ElevatedButton.icon(

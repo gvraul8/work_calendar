@@ -17,7 +17,11 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Future<void> _generatePdf() async {
     final pdfService = PdfService();
-    final pdfData = await pdfService.generateCalendarPdf(_workLog);
+    final selectedMonth = DateTime(_selectedDay.year, _selectedDay.month); // Mes seleccionado
+    final pdfData = await pdfService.generateCalendarPdf(
+      selectedMonth: selectedMonth,
+      workLog: _workLog, // Datos de trabajo
+    );
     await Printing.layoutPdf(onLayout: (format) async => pdfData);
   }
 
